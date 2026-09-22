@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 
 public class MazeApplication extends Application {
 
-    private static final int STEP = 5;
+    private static final int STEP = 2;
 
     private ImageView mazeView;
     private ImageView robotView;
@@ -25,6 +25,10 @@ public class MazeApplication extends Application {
 
         Image robotImage = new Image(getClass().getResourceAsStream("/images/robot.png"));
         robotView = new ImageView(robotImage);
+
+        System.out.println("Robot width: " + robotImage.getWidth());
+        System.out.println("Robot height: " + robotImage.getHeight());
+
         robotView.setLayoutX(16);
         robotView.setLayoutY(260);
 
