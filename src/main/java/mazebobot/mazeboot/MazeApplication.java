@@ -26,6 +26,7 @@ public class MazeApplication extends Application {
         Image robotImage = new Image(getClass().getResourceAsStream("/images/robot.png"));
         robotView = new ImageView(robotImage);
 
+        // Print the dimensions of the maze and robot images for debugging purposes.
         System.out.println("Robot width: " + robotImage.getWidth());
         System.out.println("Robot height: " + robotImage.getHeight());
 
