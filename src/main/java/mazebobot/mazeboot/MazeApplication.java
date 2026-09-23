@@ -8,6 +8,9 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.input.KeyEvent;
 
 public class MazeApplication extends Application {
 
@@ -34,20 +37,42 @@ public class MazeApplication extends Application {
         robotView.setLayoutY(260);
 
         Pane root = new Pane(mazeView, robotView);
-        Scene scene = new Scene(root, mazeImage.getWidth(), mazeImage.getHeight());
+        Maze2 maze2 = new Maze2();
+
+        Tab maze1Tab = new Tab("Maze 1", root);
+        Tab maze2Tab = new Tab("Maze 2", maze2);
+        maze1Tab.setClosable(false);
+        maze2Tab.setClosable(false);
+
+        TabPane tabs = new TabPane(maze1Tab, maze2Tab);
+        Scene scene = new Scene(
+                tabs,
+                Math.max(mazeImage.getWidth(), maze2.getMazeWidth()),
+                Math.max(mazeImage.getHeight(), maze2.getMazeHeight()) + 35
+        );
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            Direction direction;
+
+            KeyCode code = event.getCode();
+            if (code == KeyCode.UP) direction = Direction.UP;
+            else if (code == KeyCode.DOWN) direction = Direction.DOWN;
+            else if (code == KeyCode.LEFT) direction = Direction.LEFT;
+            else if (code == KeyCode.RIGHT) direction = Direction.RIGHT;
+            else return;
+
+            if (tabs.getSelectionModel().getSelectedItem() == maze1Tab) {
+                move(direction);
+            } else {
+                maze2.moveCar(direction);
+            }
+            event.consume();
+        });
 
         //This is for debugging purposes, it will print the coordinates of the mouse click on the maze.
         scene.setOnMouseClicked(event -> {
             System.out.println("X: " + event.getX() + " Y: " + event.getY());
         });
 
-        scene.setOnKeyPressed(event -> {
-            KeyCode code = event.getCode();
-            if (code == KeyCode.UP) move(Direction.UP);
-            else if (code == KeyCode.DOWN) move(Direction.DOWN);
-            else if (code == KeyCode.LEFT) move(Direction.LEFT);
-            else if (code == KeyCode.RIGHT) move(Direction.RIGHT);
-        });
 
         stage.setScene(scene);
         stage.setTitle("Maze Robot");
