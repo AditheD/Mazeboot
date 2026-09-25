@@ -51,9 +51,23 @@ public class MazeApplication extends Application {
                 Math.max(mazeImage.getHeight(), maze2.getMazeHeight()) + 35
         );
         scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-            Direction direction;
+
 
             KeyCode code = event.getCode();
+
+            // Start automatic solver on Maze 2
+            if (code == KeyCode.S) {
+
+                if (tabs.getSelectionModel().getSelectedItem() == maze2Tab) {
+                    maze2.autoSolve();
+                }
+
+                event.consume();
+                return;
+            }
+
+            Direction direction;
+
             if (code == KeyCode.UP) direction = Direction.UP;
             else if (code == KeyCode.DOWN) direction = Direction.DOWN;
             else if (code == KeyCode.LEFT) direction = Direction.LEFT;
