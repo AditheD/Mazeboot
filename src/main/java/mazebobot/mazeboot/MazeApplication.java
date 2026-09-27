@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.control.Button;
 
 public class MazeApplication extends Application {
 
@@ -38,6 +39,15 @@ public class MazeApplication extends Application {
 
         Pane root = new Pane(mazeView, robotView);
         Maze2 maze2 = new Maze2();
+        Button autoSolveButton = new Button("Auto Solve");
+
+        autoSolveButton.setOnAction(event -> {
+            maze2.autoSolve();
+        });
+
+        autoSolveButton.setLayoutX(10);
+        autoSolveButton.setLayoutY(maze2.getMazeHeight() + 10);
+        maze2.getChildren().add(autoSolveButton);
 
         Tab maze1Tab = new Tab("Maze 1", root);
         Tab maze2Tab = new Tab("Maze 2", maze2);
@@ -48,7 +58,7 @@ public class MazeApplication extends Application {
         Scene scene = new Scene(
                 tabs,
                 Math.max(mazeImage.getWidth(), maze2.getMazeWidth()),
-                Math.max(mazeImage.getHeight(), maze2.getMazeHeight()) + 35
+                Math.max(mazeImage.getHeight(), maze2.getMazeHeight()) + 80
         );
         scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
 
