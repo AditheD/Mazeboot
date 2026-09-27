@@ -13,6 +13,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.control.Button;
 
+
 public class MazeApplication extends Application {
 
     private static final int STEP = 2;
@@ -38,6 +39,11 @@ public class MazeApplication extends Application {
         robotView.setLayoutY(260);
 
         Pane root = new Pane(mazeView, robotView);
+        Button maze1SolveButton = new Button("Auto Solve");
+        maze1SolveButton.setLayoutX(10);
+        maze1SolveButton.setLayoutY(mazeImage.getHeight() + 10);
+        maze1SolveButton.setOnAction(event -> autoSolveMaze1());
+        root.getChildren().add(maze1SolveButton);
         Maze2 maze2 = new Maze2();
         Button autoSolveButton = new Button("Auto Solve");
 
@@ -104,6 +110,99 @@ public class MazeApplication extends Application {
         root.requestFocus();
     }
 
+    private void autoSolveMaze1() {
+        java.util.List<int[]> path = findMaze1Path();
+
+        if (path.isEmpty()) {
+            System.out.println("Maze 1: no path to the exit found.");
+            return;
+        }
+
+        final int[] index = {0};
+        final javafx.animation.Timeline[] animation = {null};
+
+        animation[0] = new javafx.animation.Timeline(
+                new javafx.animation.KeyFrame(
+                        javafx.util.Duration.millis(10),
+                        event -> {
+                            if (index[0] >= path.size()) {
+                                animation[0].stop();
+                                System.out.println("Maze 1 solved!");
+                                return;
+                            }
+
+                            int[] position = path.get(index[0]++);
+                            robotView.setLayoutX(position[0]);
+                            robotView.setLayoutY(position[1]);
+                        }
+                )
+        );
+
+        animation[0].setCycleCount(javafx.animation.Timeline.INDEFINITE);
+        animation[0].play();
+    }
+
+    private java.util.List<int[]> findMaze1Path() {
+        int width = (int) mazeView.getImage().getWidth();
+        int height = (int) mazeView.getImage().getHeight();
+        int robotWidth = (int) robotView.getImage().getWidth();
+
+        int startX = (int) robotView.getLayoutX();
+        int startY = (int) robotView.getLayoutY();
+        int start = startY * width + startX;
+
+        int[] previous = new int[width * height];
+        java.util.Arrays.fill(previous, -1);
+
+        java.util.ArrayDeque<Integer> queue = new java.util.ArrayDeque<>();
+        queue.add(start);
+        previous[start] = start;
+
+        int exit = -1;
+        int[][] moves = {{2, 0}, {-2, 0}, {0, 2}, {0, -2}};
+
+        while (!queue.isEmpty()) {
+            int current = queue.remove();
+            int x = current % width;
+            int y = current / width;
+
+            // Maze 1's exit is at the right side of the image.
+            if (x + robotWidth >= width - 2) {
+                exit = current;
+                break;
+            }
+
+            for (int[] move : moves) {
+                int nextX = x + move[0];
+                int nextY = y + move[1];
+
+                if (nextX < 0 || nextY < 0
+                        || nextX >= width || nextY >= height
+                        || !isPathClear(nextX, nextY)) {
+                    continue;
+                }
+
+                int next = nextY * width + nextX;
+                if (previous[next] != -1) {
+                    continue;
+                }
+
+                previous[next] = current;
+                queue.add(next);
+            }
+        }
+
+        if (exit == -1) {
+            return java.util.Collections.emptyList();
+        }
+
+        java.util.List<int[]> path = new java.util.ArrayList<>();
+        for (int position = exit; position != start; position = previous[position]) {
+            path.add(new int[]{position % width, position / width});
+        }
+        java.util.Collections.reverse(path);
+        return path;
+    }
     private boolean isPathClear(double x, double y) {
         double width = robotView.getImage().getWidth();
         double height = robotView.getImage().getHeight();
@@ -147,3 +246,8 @@ public class MazeApplication extends Application {
         launch(args);
     }
 }
+
+
+
+
+
