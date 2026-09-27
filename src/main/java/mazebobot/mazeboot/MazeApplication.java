@@ -143,6 +143,10 @@ public class MazeApplication extends Application {
     }
 
     private java.util.List<int[]> findMaze1Path() {
+
+        robotView.setLayoutX(16);
+        robotView.setLayoutY(260);
+
         int width = (int) mazeView.getImage().getWidth();
         int height = (int) mazeView.getImage().getHeight();
         int robotWidth = (int) robotView.getImage().getWidth();
