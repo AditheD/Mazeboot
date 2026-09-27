@@ -22,15 +22,12 @@ public class Maze2 extends Pane {
     private Timeline solverAnimation;
 
     public Maze2() {
-        mazeImage = new Image(
-                getClass().getResourceAsStream("/images/maze2.png")
-        );
+        mazeImage = new Image(getClass().getResourceAsStream("/images/maze2.png"));
         pixelReader = mazeImage.getPixelReader();
 
         ImageView mazeView = new ImageView(mazeImage);
         car = new Car();
         car.setPosition(35, 34);
-
         getChildren().addAll(mazeView, car);
     }
 
@@ -92,6 +89,8 @@ public class Maze2 extends Pane {
         if (solverAnimation != null) {
             solverAnimation.stop();
         }
+        car.setDirection(Direction.RIGHT);
+        car.setPosition(35, 34);
 
         List<Direction> solution = findSolution();
 
@@ -114,7 +113,7 @@ public class Maze2 extends Pane {
         int startY = (int) car.getLayoutY();
 
         // Destination in maze2.png
-        int goalX = 446;
+        int goalX = 455;
         int goalY = 329;
 
         Point start = new Point(startX, startY);
