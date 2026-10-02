@@ -1,4 +1,4 @@
-# Maze Robot
+# Mazeboot
 
 A JavaFX application that lets users navigate two mazes manually or watch an automatic solving animation.
 
